@@ -867,20 +867,22 @@ router.get('/results', authenticateToken, async (req, res) => {
         const subjectStream = candidateDoc['Subject Stream'];
         const isBioScience = subjectStream === 'Bio Science';
 
+        const resultsSource = candidateDoc.results_26 || {};
+
         // Extract only the requested fields based on subject stream
         const filteredResults = {
-            district_rank: candidateDoc.results?.district_rank || "",
-            island_rank: candidateDoc.results?.island_rank || "",
-            final_zscore: candidateDoc.results?.final_zscore || "",
-            physics_grade: candidateDoc.results?.physics_grade || "",
-            chemistry_grade: candidateDoc.results?.chemistry_grade || ""
+            district_rank: resultsSource.district_rank || "",
+            island_rank: resultsSource.island_rank || "",
+            final_zscore: resultsSource.final_zscore || "",
+            physics_grade: resultsSource.physics_grade || "",
+            chemistry_grade: resultsSource.chemistry_grade || ""
         };
 
         // Add bio_grade for Bio Science students or maths_grade for Physical Science students
         if (isBioScience) {
-            filteredResults.bio_grade = candidateDoc.results?.bio_grade || "";
+            filteredResults.bio_grade = resultsSource.bio_grade || "";
         } else {
-            filteredResults.maths_grade = candidateDoc.results?.maths_grade || "";
+            filteredResults.maths_grade = resultsSource.maths_grade || "";
         }
 
         const duration = Date.now() - startTime;
